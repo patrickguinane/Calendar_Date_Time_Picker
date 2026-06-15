@@ -54,6 +54,21 @@ const SummaryTable = () => {
         { decision: "Backend errors", approach: "Hint text below button", why: "Consistent with form input error pattern" },
         { decision: "Single date + time", approach: "Two separate fields", why: "Keeps calendar simple; time can be optional/independent" },
         { decision: "Range + time", approach: "Time inside dialog", why: "Minimises clicks; one flow for start/end date+time" },
+        {
+            decision: "Empty cells for out-of-month dates",
+            approach: "Blank cells with no date or styling",
+            why: "Prevents confusion with the disabled/unavailable date state — two different things shouldn't look the same.",
+        },
+        {
+            decision: "Range selection blocked at unavailable dates",
+            approach: "Selection stops at unavailable boundary",
+            why: "Prevents users submitting ranges that include dates they can't use.",
+        },
+        {
+            decision: "Preset quick actions removed",
+            approach: "Calendar opens with no preset shortcuts",
+            why: "Adds visual noise for minimal utility — picker opens directly to calendar view.",
+        },
     ];
 
     return (
