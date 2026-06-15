@@ -97,7 +97,7 @@ export const DateTimePickerDemo = () => {
             <VariantSection
                 number={1}
                 title="Date Picker"
-                description="Selects a single date. Calendar dialog with date input, Today preset, and Cancel/Apply."
+                description="Selects a single date. Calendar dialog with date input and Cancel/Apply."
                 whenToUse="The user needs to pick one specific day and time doesn't matter. Due dates, start dates, birth dates, expiry dates — any form field that expects a calendar date."
             >
                 <DatePicker label="Date" />
@@ -121,8 +121,8 @@ export const DateTimePickerDemo = () => {
             <VariantSection
                 number={3}
                 title="Date Range Picker — Single Month"
-                description="Start and end date selection. Single calendar month with preset links, stacked Start/End date inputs, and Cancel/Apply."
-                whenToUse="The user needs to define a period of time (date-only) and the viewport is narrow — mobile, tablet, or a compact sidebar filter. Preset links give quick access to common ranges like last week or last month."
+                description="Start and end date selection. Single calendar month with stacked Start/End date inputs, and Cancel/Apply."
+                whenToUse="The user needs to define a period of time (date-only) and the viewport is narrow — mobile, tablet, or a compact sidebar filter."
             >
                 <DateRangePicker label="Date" singleMonth />
             </VariantSection>
@@ -133,8 +133,8 @@ export const DateTimePickerDemo = () => {
             <VariantSection
                 number={4}
                 title="Date Range Picker — Dual Month"
-                description="Desktop layout with preset sidebar, two visible calendar months, date inputs in the footer, and a Clear link."
-                whenToUse="Same as above but on desktop where there's room for two months. The dual calendar makes it easier to select ranges that span across months. The preset sidebar provides one-click access to common periods. Use this as the default range picker on wider screens."
+                description="Desktop layout with two visible calendar months, date inputs in the footer, and a Clear link."
+                whenToUse="Same as above but on desktop where there's room for two months. The dual calendar makes it easier to select ranges that span across months. Use this as the default range picker on wider screens."
             >
                 <DateRangePicker label="Date" />
             </VariantSection>
@@ -157,8 +157,8 @@ export const DateTimePickerDemo = () => {
             <VariantSection
                 number={6}
                 title="Date & Time Range Picker — Dual Month"
-                description="Desktop layout with preset sidebar, dual calendar, Start/End date+time on one row, and Clear + Cancel/Apply."
-                whenToUse="The desktop version of the time range picker. Two months visible for cross-month selections, presets for quick access, and all date+time inputs visible at once. Use whenever precise time windows are needed and the user has a full-width screen."
+                description="Desktop layout with dual calendar, Start/End date+time on one row, and Clear + Cancel/Apply."
+                whenToUse="The desktop version of the time range picker. Two months visible for cross-month selections, and all date+time inputs visible at once. Use whenever precise time windows are needed and the user has a full-width screen."
             >
                 <DateTimeRangePicker label="Date and time" />
             </VariantSection>

@@ -1,14 +1,10 @@
 "use client";
 
-import { useMemo, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import {
     CalendarDate,
     CalendarDateTime,
-    endOfMonth,
-    endOfWeek,
     getLocalTimeZone,
-    startOfMonth,
-    startOfWeek,
     today,
     Time,
 } from "@internationalized/date";
@@ -20,13 +16,11 @@ import {
     Dialog as AriaDialog,
     Group as AriaGroup,
     Popover as AriaPopover,
-    useLocale,
 } from "react-aria-components";
 import { Button } from "@/components/base/buttons/button";
 import { cx } from "@/utils/cx";
 import { DateInput } from "./date-input";
 import { RangeCalendar } from "./range-calendar";
-import { RangePresetButton } from "./range-preset";
 import { TimeInput } from "./time-input";
 
 const now = today(getLocalTimeZone());
@@ -60,7 +54,6 @@ const toDateTime = (date: DateValue, hour = 0, minute = 0): CalendarDateTime => 
 };
 
 export const DateTimeRangePicker = ({ label, value, defaultValue, onChange, singleMonth = false, onApply, onCancel, ...props }: DateTimeRangePickerProps) => {
-    const { locale } = useLocale();
     const dateFormatter = useDateFormatter({
         month: "short",
         day: "numeric",
@@ -141,55 +134,6 @@ export const DateTimeRangePicker = ({ label, value, defaultValue, onChange, sing
     const startTimeValue = dateTimeValue?.start ? new Time(dateTimeValue.start.hour, dateTimeValue.start.minute) : null;
     const endTimeValue = dateTimeValue?.end ? new Time(dateTimeValue.end.hour, dateTimeValue.end.minute) : null;
 
-    const presets = useMemo(
-        () => ({
-            today: { label: "Today", value: { start: now, end: now } },
-            yesterday: { label: "Yesterday", value: { start: now.subtract({ days: 1 }), end: now.subtract({ days: 1 }) } },
-            thisWeek: { label: "This week", value: { start: startOfWeek(now, locale), end: endOfWeek(now, locale) } },
-            lastWeek: {
-                label: "Last week",
-                value: {
-                    start: startOfWeek(now, locale).subtract({ weeks: 1 }),
-                    end: endOfWeek(now, locale).subtract({ weeks: 1 }),
-                },
-            },
-            thisMonth: { label: "This month", value: { start: startOfMonth(now), end: endOfMonth(now) } },
-            lastMonth: {
-                label: "Last month",
-                value: {
-                    start: startOfMonth(now).subtract({ months: 1 }),
-                    end: endOfMonth(now).subtract({ months: 1 }),
-                },
-            },
-            thisYear: { label: "This year", value: { start: startOfMonth(now.set({ month: 1 })), end: endOfMonth(now.set({ month: 12 })) } },
-            lastYear: {
-                label: "Last year",
-                value: {
-                    start: startOfMonth(now.set({ month: 1 }).subtract({ years: 1 })),
-                    end: endOfMonth(now.set({ month: 12 }).subtract({ years: 1 })),
-                },
-            },
-            allTime: {
-                label: "All time",
-                value: {
-                    start: now.set({ year: 2000, month: 1, day: 1 }),
-                    end: now,
-                },
-            },
-        }),
-        [locale],
-    );
-
-    // When a preset is selected, set times to start-of-day / end-of-day
-    const handlePresetClick = (preset: { start: DateValue; end: DateValue }) => {
-        const newValue: DateTimeRange = {
-            start: toDateTime(preset.start, 0, 0),
-            end: toDateTime(preset.end, 23, 59),
-        };
-        setDateTimeValue(newValue);
-        setFocusedValue(preset.start);
-    };
-
     return (
         <div className="flex flex-col gap-1.5">
             {label && <label className="text-sm font-medium text-secondary">{label}</label>}
@@ -225,29 +169,12 @@ export const DateTimeRangePicker = ({ label, value, defaultValue, onChange, sing
                     <AriaDialog className="flex rounded-2xl bg-primary shadow-xl ring ring-secondary_alt focus:outline-hidden">
                         {({ close }) => (
                             <>
-                                {/* Desktop preset sidebar — only for dual month view */}
-                                <div className={cx("hidden w-38 flex-col gap-0.5 border-r border-solid border-secondary p-3", !singleMonth && "lg:flex")}>
-                                    {Object.values(presets).map((preset) => (
-                                        <RangePresetButton
-                                            key={preset.label}
-                                            value={preset.value}
-                                            onClick={() => handlePresetClick(preset.value)}
-                                        >
-                                            {preset.label}
-                                        </RangePresetButton>
-                                    ))}
-                                </div>
                                 <div className="flex flex-col">
                                     <RangeCalendar
                                         focusedValue={focusedValue}
                                         onFocusChange={setFocusedValue}
                                         highlightedDates={highlightedDates}
                                         singleMonth={singleMonth}
-                                        presets={{
-                                            lastWeek: presets.lastWeek,
-                                            lastMonth: presets.lastMonth,
-                                            lastYear: presets.lastYear,
-                                        }}
                                     />
 
                                     {/* Single month footer: Start/End rows with date+time, then Cancel/Apply */}

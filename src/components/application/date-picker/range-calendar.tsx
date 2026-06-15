@@ -1,8 +1,7 @@
 "use client";
 
-import type { HTMLAttributes, PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { Fragment, useContext, useState } from "react";
-import type { CalendarDate } from "@internationalized/date";
 import { ChevronLeft, ChevronRight } from "@untitledui/icons";
 import { useDateFormatter } from "react-aria";
 import type { RangeCalendarProps as AriaRangeCalendarProps, DateValue } from "react-aria-components";
@@ -19,7 +18,6 @@ import {
 import { Button } from "@/components/base/buttons/button";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { CalendarCell } from "./cell";
-import { DateInput } from "./date-input";
 
 export const RangeCalendarContextProvider = ({ children }: PropsWithChildren) => {
     const [value, onChange] = useState<{ start: DateValue; end: DateValue } | null>(null);
@@ -47,35 +45,14 @@ const RangeCalendarTitle = ({ part }: { part: "start" | "end" }) => {
         : formatter.format(context.visibleRange.end.toDate(context.timeZone));
 };
 
-const MobilePresetButton = ({ value, children, ...props }: HTMLAttributes<HTMLButtonElement> & { value: { start: DateValue; end: DateValue } }) => {
-    const context = useContext(RangeCalendarStateContext);
-
-    return (
-        <Button
-            {...props}
-            slot={null}
-            size="sm"
-            color="link-color"
-            onClick={() => {
-                context?.setValue(value);
-                context?.setFocusedDate(value.start as CalendarDate);
-            }}
-        >
-            {children}
-        </Button>
-    );
-};
-
 interface RangeCalendarProps extends AriaRangeCalendarProps<DateValue> {
     /** The dates to highlight. */
     highlightedDates?: DateValue[];
-    /** The date presets to display. */
-    presets?: Record<string, { label: string; value: { start: DateValue; end: DateValue } }>;
     /** Force single month view even on desktop. @default false */
     singleMonth?: boolean;
 }
 
-export const RangeCalendar = ({ presets, singleMonth = false, ...props }: RangeCalendarProps) => {
+export const RangeCalendar = ({ singleMonth = false, ...props }: RangeCalendarProps) => {
     const isDesktopBreakpoint = useBreakpoint("md");
     const isDesktop = isDesktopBreakpoint && !singleMonth;
     const context = useSlottedContext(RangeCalendarContext);
@@ -86,6 +63,7 @@ export const RangeCalendar = ({ presets, singleMonth = false, ...props }: RangeC
         <ContextWrapper>
             <AriaRangeCalendar
                 className="flex items-start"
+                allowsNonContiguousRanges={false}
                 visibleDuration={{
                     months: isDesktop ? 2 : 1,
                 }}
@@ -101,16 +79,6 @@ export const RangeCalendar = ({ presets, singleMonth = false, ...props }: RangeC
 
                         {!isDesktop && <Button slot="next" iconLeading={ChevronRight} size="sm" color="tertiary" className="size-8" />}
                     </header>
-
-                    {!isDesktop && presets && (
-                        <div className="mt-1 flex justify-between gap-3 px-2">
-                            {Object.values(presets).map((preset) => (
-                                <MobilePresetButton key={preset.label} value={preset.value}>
-                                    {preset.label}
-                                </MobilePresetButton>
-                            ))}
-                        </div>
-                    )}
 
                     <AriaCalendarGrid weekdayStyle="short" className="w-max">
                         <AriaCalendarGridHeader>
